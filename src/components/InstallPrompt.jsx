@@ -1,61 +1,68 @@
 import React, { useState, useEffect } from 'react';
-import { Download, X } from 'lucide-react';
+import { Download, X, Share } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function InstallPrompt() {
     const [deferredPrompt, setDeferredPrompt] = useState(null);
     const [showPrompt, setShowPrompt] = useState(false);
     const [isIOS, setIsIOS] = useState(false);
+    const [isStandalone, setIsStandalone] = useState(false);
 
     useEffect(() => {
-        // Check if it's iOS
+        // Detect if already installed
+        const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        setIsStandalone(standalone);
+
+        if (standalone) return;
+
+        // Detect iOS
         const isIosDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         setIsIOS(isIosDevice);
 
-        // Check if already installed
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-
-        if (isStandalone) return;
-
         const handleBeforeInstallPrompt = (e) => {
+            console.log('beforeinstallprompt event fired');
             e.preventDefault();
             setDeferredPrompt(e);
-            // Show prompt after a few seconds
-            setTimeout(() => setShowPrompt(true), 3000);
+            setShowPrompt(true); // Show immediately when ready
         };
 
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-        // For iOS, we can't detect beforeinstallprompt, so we just show it
-        if (isIosDevice) {
-            setTimeout(() => setShowPrompt(true), 5000);
-        }
+        // For iOS or if the event doesn't fire quickly, show after 2 seconds
+        const timer = setTimeout(() => {
+            if (!standalone) {
+                setShowPrompt(true);
+            }
+        }, 2000);
 
-        return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+            clearTimeout(timer);
+        };
     }, []);
 
     const handleInstall = async () => {
         if (!deferredPrompt) {
-            alert('Te rugăm să folosești meniul browserului (cele 3 puncte) și să selectezi "Install App" sau "Add to Home Screen".');
+            // Fallback for Android if the event didn't fire yet or isn't supported
+            if (!isIOS) {
+                alert('Pentru a instala: Apasă pe cele 3 puncte (sus dreapta) și selectează "Adaugă pe ecranul de pornire" sau "Instalează aplicația".');
+            }
             return;
         }
 
         try {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
-            console.log(`User response to the install prompt: ${outcome}`);
-
             if (outcome === 'accepted') {
                 setDeferredPrompt(null);
                 setShowPrompt(false);
             }
         } catch (err) {
-            console.error('Error during installation:', err);
-            alert('Te rugăm să folosești meniul browserului pentru instalare.');
+            console.error('Installation error:', err);
         }
     };
 
-    if (!showPrompt) return null;
+    if (isStandalone || !showPrompt) return null;
 
     return (
         <AnimatePresence>
@@ -65,38 +72,69 @@ export default function InstallPrompt() {
                 exit={{ y: 100, opacity: 0 }}
                 style={{
                     position: 'fixed',
-                    bottom: '100px',
-                    left: '20px',
-                    right: '20px',
-                    zIndex: 2000,
-                    maxWidth: '460px',
+                    bottom: '20px',
+                    left: '15px',
+                    right: '15px',
+                    zIndex: 9999,
+                    maxWidth: '470px',
                     margin: '0 auto'
                 }}
             >
-                <div className="glass-panel" style={{ padding: '15px 20px', display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(30, 30, 30, 0.95)', border: '1px solid var(--primary)' }}>
-                    <div style={{ background: 'var(--primary)', padding: '10px', borderRadius: '12px' }}>
-                        <Download size={24} color="white" />
+                <div className="glass-panel" style={{
+                    padding: '20px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '15px',
+                    background: 'rgba(20, 20, 20, 0.98)',
+                    border: '2px solid var(--primary)',
+                    boxShadow: '0 10px 40px rgba(255, 77, 77, 0.3)',
+                    borderRadius: '24px'
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                        <div style={{ background: 'var(--primary)', padding: '12px', borderRadius: '16px', boxShadow: '0 5px 15px rgba(255, 77, 77, 0.4)' }}>
+                            <Download size={28} color="white" />
+                        </div>
+                        <div style={{ flex: 1 }}>
+                            <h4 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '4px', color: 'white' }}>Instalează Aplicația</h4>
+                            <p style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.4' }}>
+                                Primești notificări și acces rapid la cei mai buni burgeri!
+                            </p>
+                        </div>
+                        <button onClick={() => setShowPrompt(false)} style={{ color: '#666', padding: '5px' }}>
+                            <X size={24} />
+                        </button>
                     </div>
-                    <div style={{ flex: 1 }}>
-                        <h4 style={{ fontSize: '14px', marginBottom: '2px' }}>Instalează Burgero</h4>
-                        <p style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-                            {isIOS
-                                ? 'Apasă pe "Share" și "Add to Home Screen"'
-                                : 'Adaugă aplicația pe ecranul tău principal'
-                            }
-                        </p>
-                    </div>
-                    {!isIOS && (
+
+                    {isIOS ? (
+                        <div style={{
+                            background: 'rgba(255,255,255,0.05)',
+                            padding: '12px',
+                            borderRadius: '12px',
+                            fontSize: '13px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            border: '1px dashed #444'
+                        }}>
+                            <span>Apasă pe butonul de partajare</span>
+                            <Share size={18} color="#007AFF" />
+                            <span>apoi "Add to Home Screen"</span>
+                        </div>
+                    ) : (
                         <button
                             onClick={handleInstall}
-                            style={{ background: 'var(--primary)', color: 'white', padding: '6px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: '700' }}
+                            className="btn-primary"
+                            style={{
+                                width: '100%',
+                                padding: '16px',
+                                fontSize: '16px',
+                                textTransform: 'uppercase',
+                                letterSpacing: '1px'
+                            }}
                         >
-                            Instalează
+                            Instalează Acum
                         </button>
                     )}
-                    <button onClick={() => setShowPrompt(false)} style={{ color: 'var(--text-muted)' }}>
-                        <X size={18} />
-                    </button>
                 </div>
             </motion.div>
         </AnimatePresence>

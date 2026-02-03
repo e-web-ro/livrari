@@ -13,7 +13,6 @@ import './App.css';
 
 function App() {
   const [cart, setCart] = useState([]);
-  const [showWelcome, setShowWelcome] = useState(true);
 
   const addToCart = (product) => {
     setCart(prev => {
@@ -46,18 +45,12 @@ function App() {
       <div className="app-container">
         <AnimatePresence mode="wait">
           <Routes>
-            {showWelcome ? (
-              <Route path="*" element={<Welcome onFinish={() => setShowWelcome(false)} />} />
-            ) : (
-              <>
-                <Route path="/" element={<Home addToCart={addToCart} cartCount={cart.length} />} />
-                <Route path="/product/:id" element={<ProductDetail addToCart={addToCart} />} />
-                <Route path="/cart" element={<Cart cart={cart} removeFromCart={removeFromCart} updateQuantity={updateQuantity} />} />
-                <Route path="/checkout" element={<Checkout cart={cart} />} />
-                <Route path="/tracking" element={<Tracking />} />
-                <Route path="/profile" element={<Profile />} />
-              </>
-            )}
+            <Route path="/" element={<Home addToCart={addToCart} cartCount={cart.length} />} />
+            <Route path="/product/:id" element={<ProductDetail addToCart={addToCart} />} />
+            <Route path="/cart" element={<Cart cart={cart} removeFromCart={removeFromCart} updateQuantity={updateQuantity} />} />
+            <Route path="/checkout" element={<Checkout cart={cart} />} />
+            <Route path="/tracking" element={<Tracking />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </AnimatePresence>
         <InstallPrompt />

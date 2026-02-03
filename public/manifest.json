@@ -1,6 +1,6 @@
 {
-    "name": "Burgero - Food Delivery",
-    "short_name": "Burgero",
+    "name": "Food Delivery",
+    "short_name": "Food",
     "description": "Premium Fast Food Delivery Model",
     "start_url": "/",
     "scope": "/",

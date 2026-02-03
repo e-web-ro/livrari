@@ -33,7 +33,7 @@ export default function ProductDetail({ addToCart }) {
                 />
                 <button
                     onClick={() => navigate(-1)}
-                    style={{ position: 'absolute', top: '40px', left: '20px', background: 'white', color: 'black', padding: '10px', borderRadius: '12px' }}
+                    style={{ position: 'absolute', top: 'var(--safe-area-top)', left: '20px', background: 'white', color: 'black', padding: '10px', borderRadius: '12px', zIndex: 10 }}
                 >
                     <ChevronLeft />
                 </button>
@@ -94,12 +94,14 @@ export default function ProductDetail({ addToCart }) {
                         width: '100%',
                         maxWidth: '500px',
                         padding: '20px',
-                        background: 'rgba(26,26,26,0.9)',
+                        paddingBottom: 'calc(var(--safe-area-bottom) + 10px)',
+                        background: 'rgba(26,26,26,0.95)',
                         backdropFilter: 'blur(10px)',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        borderTop: '1px solid var(--glass-border)'
+                        borderTop: '1px solid var(--glass-border)',
+                        zIndex: 100
                     }}
                 >
                     <div>

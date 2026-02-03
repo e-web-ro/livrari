@@ -18,6 +18,7 @@ export default function Welcome({ onFinish }) {
                 flexDirection: 'column',
                 justifyContent: 'flex-end',
                 padding: '40px 20px',
+                paddingBottom: 'calc(var(--safe-area-bottom) + 20px)',
                 textAlign: 'center'
             }}
         >

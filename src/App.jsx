@@ -8,6 +8,7 @@ import Checkout from './pages/Checkout';
 import Tracking from './pages/Tracking';
 import Profile from './pages/Profile';
 import Welcome from './pages/Welcome';
+import InstallPrompt from './components/InstallPrompt';
 import './App.css';
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
             )}
           </Routes>
         </AnimatePresence>
+        <InstallPrompt />
       </div>
     </Router>
   );

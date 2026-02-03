@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Burgero</string>
+    <string name="title_activity_main">Burgero</string>
+    <string name="package_name">com.eweb.burgero</string>
+    <string name="custom_url_scheme">com.eweb.burgero</string>
+</resources>

@@ -67,57 +67,60 @@ export default function InstallPrompt() {
     return (
         <AnimatePresence>
             <motion.div
-                initial={{ y: 100, opacity: 0 }}
+                initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 100, opacity: 0 }}
+                exit={{ y: -100, opacity: 0 }}
                 style={{
                     position: 'fixed',
-                    bottom: '20px',
+                    top: '15px',
                     left: '15px',
                     right: '15px',
-                    zIndex: 9999,
+                    zIndex: 10000,
                     maxWidth: '470px',
-                    margin: '0 auto'
+                    margin: '0 auto',
+                    pointerEvents: 'none'
                 }}
             >
                 <div className="glass-panel" style={{
-                    padding: '20px',
+                    padding: '16px',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '15px',
+                    gap: '12px',
                     background: 'rgba(20, 20, 20, 0.98)',
                     border: '2px solid var(--primary)',
-                    boxShadow: '0 10px 40px rgba(255, 77, 77, 0.3)',
-                    borderRadius: '24px'
+                    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)',
+                    borderRadius: '20px',
+                    pointerEvents: 'auto'
                 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                        <div style={{ background: 'var(--primary)', padding: '12px', borderRadius: '16px', boxShadow: '0 5px 15px rgba(255, 77, 77, 0.4)' }}>
-                            <Download size={28} color="white" />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div style={{ background: 'var(--primary)', padding: '10px', borderRadius: '12px' }}>
+                            <Download size={24} color="white" />
                         </div>
                         <div style={{ flex: 1 }}>
-                            <h4 style={{ fontSize: '18px', fontWeight: '800', marginBottom: '4px', color: 'white' }}>Instalează Aplicația</h4>
-                            <p style={{ fontSize: '13px', color: '#ccc', lineHeight: '1.4' }}>
-                                Primești notificări și acces rapid la cei mai buni burgeri!
+                            <h4 style={{ fontSize: '16px', fontWeight: '800', marginBottom: '2px', color: 'white' }}>Instalează Burgero</h4>
+                            <p style={{ fontSize: '12px', color: '#aaa', lineHeight: '1.2' }}>
+                                Primești notificări și acces rapid!
                             </p>
                         </div>
                         <button onClick={() => setShowPrompt(false)} style={{ color: '#666', padding: '5px' }}>
-                            <X size={24} />
+                            <X size={20} />
                         </button>
                     </div>
 
                     {isIOS ? (
                         <div style={{
                             background: 'rgba(255,255,255,0.05)',
-                            padding: '12px',
-                            borderRadius: '12px',
-                            fontSize: '13px',
+                            padding: '10px',
+                            borderRadius: '10px',
+                            fontSize: '12px',
                             display: 'flex',
                             alignItems: 'center',
-                            gap: '10px',
-                            border: '1px dashed #444'
+                            justifyContent: 'center',
+                            gap: '8px',
+                            color: '#eee'
                         }}>
-                            <span>Apasă pe butonul de partajare</span>
-                            <Share size={18} color="#007AFF" />
+                            <span>Apasă</span>
+                            <Share size={16} color="#007AFF" />
                             <span>apoi "Add to Home Screen"</span>
                         </div>
                     ) : (
@@ -126,10 +129,9 @@ export default function InstallPrompt() {
                             className="btn-primary"
                             style={{
                                 width: '100%',
-                                padding: '16px',
-                                fontSize: '16px',
-                                textTransform: 'uppercase',
-                                letterSpacing: '1px'
+                                padding: '12px',
+                                fontSize: '14px',
+                                borderRadius: '12px'
                             }}
                         >
                             Instalează Acum

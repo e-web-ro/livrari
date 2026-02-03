@@ -35,13 +35,23 @@ export default function InstallPrompt() {
     }, []);
 
     const handleInstall = async () => {
-        if (deferredPrompt) {
+        if (!deferredPrompt) {
+            alert('Te rugăm să folosești meniul browserului (cele 3 puncte) și să selectezi "Install App" sau "Add to Home Screen".');
+            return;
+        }
+
+        try {
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to the install prompt: ${outcome}`);
+
             if (outcome === 'accepted') {
                 setDeferredPrompt(null);
                 setShowPrompt(false);
             }
+        } catch (err) {
+            console.error('Error during installation:', err);
+            alert('Te rugăm să folosești meniul browserului pentru instalare.');
         }
     };
 
